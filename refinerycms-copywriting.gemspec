@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.platform          = Gem::Platform::RUBY
   s.name              = 'refinerycms-copywriting'
-  s.version           = '4.0.0'
+  s.version           = '4.0.1'
   s.date              = '2021-10-02'
   s.description       = 'Extract all your strings and leave no human word behind, with i18n'
   s.summary           = 'Refinery CMS engine to manage copywriting, application wide or per pages, with i18n.'
