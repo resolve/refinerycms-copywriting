@@ -10,7 +10,7 @@ module Refinery
         self.translation_class.send :attr_accessor, :locale
       end
 
-      default_scope order([:scope, :name])
+      default_scope { order([:scope, :name]) }
 
       def self.for(name, options = {})
         options = {:phrase_type => 'text', :scope => 'default'}.merge(options.reject {|k,v| v.blank? })
