@@ -1,23 +1,16 @@
 language: ruby
-before_script:
-  - "bundle exec rake refinery:testing:dummy_app > /dev/null"
-script: "bundle exec rake spec"
-notifications:
-  email:
-    - unixcharles@gmail.com
+cache: bundler
+bundler_args: --without development
+before_script: "bin/rake refinery:testing:dummy_app"
 env:
   - DB=postgresql
   - DB=mysql
-
-matrix:
-  allow_failures:
-    - rvm: rbx-18mode
-    - rvm: rbx-19mode
+notifications:
+  email: 
+    - unixcharles@gmail.com
 rvm:
-  - 1.8.7
-  - 1.9.2
-  - 1.9.3
-  - rbx-18mode
-  - rbx-19mode
-  - jruby-19mode
-  - jruby-18mode
+  - 2.3.0
+  - 2.2
+  - 2.1
+  - 2.0.0
+sudo: false
