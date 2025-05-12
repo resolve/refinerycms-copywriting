@@ -2,47 +2,35 @@ module Refinery
   module Copywriting
     class Phrase < Refinery::Core::BaseModel
 
-      belongs_to :page, class_name: 'Refinery::Page', optional: true
-      translates :value if respond_to?(:translates)
-      validates :name, presence: true
+      belongs_to :page, :class_name => 'Refinery::Page', optional: true
+      translates :value if self.respond_to?(:translates)
+      validates :name, :presence => true
 
-      # Default scope for ordering phrases
-      default_scope { order(:scope, :name) }
+      attr_accessible :locale, :name, :default, :value, :scope, :page, :page_id, :phrase_type
 
-      # Find or create a phrase by name and options
+      if self.respond_to?(:translation_class)
+        self.translation_class.send :attr_accessible, :locale
+      end
+
+      default_scope order([:scope, :name])
+
       def self.for(name, options = {})
-        options = default_options.merge(options.compact_blank)
+        options = {:phrase_type => 'text', :scope => 'default'}.merge(options.reject {|k,v| v.blank? })
         options[:name] = name.to_s
-        options[:page_id] ||= options[:page]&.id
+        options[:page_id] ||= options[:page].try(:id)
 
-        phrase = find_or_create_phrase(options)
-        phrase.update_phrase_attributes(options)
+        phrase = self.find_by_name_and_scope(options[:name], options[:scope]) || self.create(options)
+        phrase.update_attributes(options.except(:value, :page, :page_id, :locale))
+        phrase.last_access_at = Date.today
+        phrase.save if phrase.changed?
+
         phrase.default_or_value
       end
 
-      # Return the value if present, otherwise return the default
       def default_or_value
-        value.presence || default
+        value.present? ? value : default
       end
 
-      private
-
-      # Default options for a phrase
-      def self.default_options
-        { phrase_type: 'text', scope: 'default' }
-      end
-
-      # Find or create a phrase by name, scope, and page_id
-      def self.find_or_create_phrase(options)
-        find_by(name: options[:name], scope: options[:scope]) || create(options)
-      end
-
-      # Update phrase attributes and save if changed
-      def update_phrase_attributes(options)
-        assign_attributes(options.except(:value, :page, :page_id, :locale))
-        self.last_access_at = Date.today
-        save if changed?
-      end
     end
   end
 end
