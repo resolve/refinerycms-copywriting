@@ -14,7 +14,7 @@ module Refinery
         options[:page_id] ||= options[:page].try(:id)
 
         phrase = self.find_by_name_and_scope(options[:name], options[:scope]) || self.create(options)
-        phrase.update_attributes(options.except(:value, :page, :page_id, :locale))
+        phrase.update(options.except(:value, :page, :page_id, :locale))
         phrase.last_access_at = Date.today
         phrase.save if phrase.changed?
 
