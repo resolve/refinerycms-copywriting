@@ -6,10 +6,6 @@ module Refinery
       translates :value if self.respond_to?(:translates)
       validates :name, :presence => true
 
-      if self.respond_to?(:translation_class)
-        self.translation_class.send :attr_accessible, :locale
-      end
-
       default_scope order([:scope, :name])
 
       def self.for(name, options = {})
