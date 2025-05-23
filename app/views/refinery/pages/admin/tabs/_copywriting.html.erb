@@ -1,6 +1,22 @@
 <% copywriting_phrases = @page.copywriting_phrases %>
-<% if copywriting_phrases and copywriting_phrases.any? %>
+<% if copywriting_phrases && copywriting_phrases.any? %>
   <div class='wym_skin_refinery page_part' id='copywriting-tab'>
+    <% locales = ::Refinery::I18n.locales.select { |locale, _title| @locales.include?(locale) } %>
+    <ul class='collapsible_menu closed'>
+      <% if @current_locale %>
+        <% current_locale = @current_locale %>
+        <% current_locale_title = locales[current_locale] %>
+        <li>
+          <span><%= current_locale_title %> (<%= current_locale %>)</span>
+        </li>
+      <% end %>
+      <% locales.each do |locale, title| %>
+        <% next if locale == @current_locale %>
+        <li>
+          <span><%= title %> (<%= locale %>)</span>
+        </li>
+      <% end %>
+    </ul>
     <ul>
       <% copywriting_phrases.each do |phrase| %>
         <li>
