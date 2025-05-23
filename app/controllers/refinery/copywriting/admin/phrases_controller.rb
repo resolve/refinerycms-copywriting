@@ -4,22 +4,26 @@ module Refinery
       class PhrasesController < ::Refinery::AdminController
         before_action :find_all_locales, :find_locale, :find_scope, :find_all_scopes
 
-        crudify :'refinery/copywriting/phrase', :searchable => false,
-                :title_attribute => 'name', :xhr_paging => true, :sortable => false,
-                :redirect_to_url => 'refinery.copywriting_admin_phrases_path'
+        crudify :'refinery/copywriting/phrase',
+                searchable: false,
+                title_attribute: 'name',
+                xhr_paging: true,
+                sortable: false,
+                redirect_to_url: 'refinery.copywriting_admin_phrases_path'
 
-      protected
+        protected
 
         def find_all_phrases
-          @phrases = Phrase.where(:page_id => nil)
-
-          if find_scope
-            @phrases = @phrases.where(:scope => find_scope)
-          end
+          @phrases = Phrase.where(page_id: nil)
+          @phrases = @phrases.where(scope: find_scope) if find_scope
         end
 
         def find_locale
-          @current_locale ||= (params[:switch_locale].try(:to_sym) || Thread.current[:globalize_locale] || default_locale).to_sym
+          @current_locale ||= (
+            params[:switch_locale].try(:to_sym) ||
+            Thread.current[:globalize_locale] ||
+            default_locale
+          ).to_sym
         end
 
         def find_all_locales
@@ -31,7 +35,7 @@ module Refinery
         end
 
         def find_all_scopes
-          @scopes ||= Phrase.select(:scope).where(:page_id => nil).map(&:scope).uniq
+          @scopes ||= Phrase.select(:scope).where(page_id: nil).distinct.pluck(:scope)
         end
 
         def default_locale
@@ -45,6 +49,9 @@ module Refinery
           end
         end
 
+        def phrase_params
+          params.require(:phrase).permit(:name, :value, :scope, :page_id, :locale)
+        end
       end
     end
   end
