@@ -16,7 +16,8 @@ module Refinery
 
         def set_locale
           locale = params[:switch_locale].presence
-          I18n.locale = I18n.available_locales.include?(locale&.to_sym) ? locale : I18n.default_locale
+          locale = locale.to_sym if locale.present?
+          I18n.locale = I18n.available_locales.include?(locale) ? locale : I18n.default_locale
         end
 
         def find_all_phrases
@@ -46,9 +47,6 @@ module Refinery
             :phrase_type
           )
         end
-        # def phrase_params
-        #   params.require(:phrase).permit(:value)
-        # end
 
       end
     end
