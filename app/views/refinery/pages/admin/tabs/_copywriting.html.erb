@@ -1,7 +1,11 @@
 <% copywriting_phrases = @page.copywriting_phrases %>
 <% if copywriting_phrases && copywriting_phrases.any? %>
   <div class='wym_skin_refinery page_part' id='copywriting-tab'>
-    <% locales = ::Refinery::I18n.locales.select { |locale, _title| @locales.include?(locale) } %>
+    <% locales = if defined?(@locales) && @locales.present?
+                    ::Refinery::I18n.locales.select { |locale, _title| @locales.include?(locale) }
+                 else
+                    ::Refinery::I18n.locales
+                 end %>
     <ul class='collapsible_menu closed'>
       <% if @current_locale %>
         <% current_locale = @current_locale %>
