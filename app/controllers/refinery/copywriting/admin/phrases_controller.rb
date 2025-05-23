@@ -15,7 +15,8 @@ module Refinery
         protected
 
         def set_locale
-          I18n.locale = params[:switch_locale].presence || I18n.default_locale
+          locale = params[:switch_locale].presence
+          I18n.locale = I18n.available_locales.include?(locale&.to_sym) ? locale : I18n.default_locale
         end
 
         def find_all_phrases

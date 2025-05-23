@@ -1,5 +1,5 @@
 <%= form_for [refinery, :copywriting, :admin, @phrase] do |f| -%>
-  <%= hidden_field_tag :switch_locale, @current_locale %>
+  <%= hidden_field_tag :switch_locale, (@current_locale.presence || I18n.locale) %>
 
   <%= render "/refinery/admin/error_messages", :object => @phrase, :include_object_name => true %>
 
