@@ -4,7 +4,7 @@ module Refinery
       class PhrasesController < ::Refinery::AdminController
         before_action :find_scope, :find_all_scopes
 
-        crudify :'refinery/copywriting/phrase', 
+        crudify :'refinery/copywriting/phrase',
                 searchable: false,
                 title_attribute: 'name',
                 sortable: false,
@@ -32,11 +32,11 @@ module Refinery
 
         def phrase_params
           params.require(:phrase).permit(
-            :name, 
-            :default, 
-            :value, 
-            :scope, 
-            :page, 
+            :name,
+            :default,
+            :value,
+            :scope,
+            :page,
             :page_id,
             :phrase_type
           )
