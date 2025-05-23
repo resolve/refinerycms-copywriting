@@ -2,7 +2,7 @@ module Refinery
   module Copywriting
     module Admin
       class PhrasesController < ::Refinery::AdminController
-        before_action :find_scope, :find_all_scopes
+        before_action :set_locale, :find_scope, :find_all_scopes
 
         crudify :'refinery/copywriting/phrase',
                 searchable: false,
@@ -13,6 +13,10 @@ module Refinery
                 params: :phrase_params
 
         protected
+
+        def set_locale
+          I18n.locale = params[:switch_locale].presence || I18n.default_locale
+        end
 
         def find_all_phrases
           @phrases = Phrase.where(:page_id => nil)
